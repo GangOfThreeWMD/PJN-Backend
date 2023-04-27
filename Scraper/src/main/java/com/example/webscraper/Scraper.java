@@ -1,5 +1,6 @@
 package com.example.webscraper;
 
+import org.GoT.Algorithm;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,6 +13,11 @@ import java.util.*;
 
 @Service
 public class Scraper {
+    private final Algorithm algorithm;
+
+    public Scraper(Algorithm algorithm) {
+        this.algorithm = algorithm;
+    }
 
     public List<News> getBBCNewsArticles(String baseUrl) {
         var links = getLinksToArticles(baseUrl);
@@ -84,8 +90,8 @@ public class Scraper {
             if(sb.isEmpty())
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
-
-            return Optional.of(new News(heading, sb.toString(), link));
+            var summarize = algorithm.getSummarize(sb.toString());
+            return Optional.of(new News(heading, summarize, link));
 
         } catch (IOException | NullPointerException | IllegalArgumentException e) {
             return Optional.empty();

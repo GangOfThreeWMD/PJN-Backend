@@ -1,7 +1,6 @@
 package com.example.webscraper;
 
 
-import org.GoT.Algorithm;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +26,6 @@ public class ScraperController {
 
     @GetMapping("/bbc/links")
     public Set<String> getBBCNewsLinks() {
-        System.out.println(Algorithm.getString());
         return scraper.getLinksToArticles("https://www.bbc.com");
     }
 
