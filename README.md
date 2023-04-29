@@ -12,7 +12,7 @@
     ```bash
     python -c "import os, sys; print(os.path.dirname(sys.executable))"
     ```
-    This instruction print path of python executable file.
+    This instruction print a path of directory where is python executable file.
 9. Set environment to *dist-packages* (or *site-packages*) folder. Go to "Run -> Edit Configurations -> select Spring Boot configuration -> Modify options -> in a section *Operating system* select **Environment variables** -> In a new textbox provide:
     * For Windows:
         ```PowerShell
