@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="819ef614-3256-4cf5-8048-01ba8ad77711" name="Changes" comment="Create multi module project">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Scraper/src/main/java/com/example/webscraper/SummarizeService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scraper/src/main/java/com/example/webscraper/ScraperController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Scraper/src/main/java/com/example/webscraper/ScraperController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Scraper/src/main/java/com/example/webscraper/WebscraperApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Scraper/src/main/java/com/example/webscraper/WebscraperApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SummarizeAlgorithm/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SummarizeAlgorithm/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SummarizeAlgorithm/src/main/java/org/GoT/Algorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/SummarizeAlgorithm/src/main/java/org/GoT/Algorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/GoT/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +23,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -49,6 +45,7 @@
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
@@ -63,7 +60,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "spring.configuration.checksum": "07e18377baf275b2fe9fd219ee5bf5c6",
+    "spring.configuration.checksum": "b7bdc9aa19535feb66ee0b6c37dd4190",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -132,7 +129,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Algorithm" />
-        <item itemvalue="Python.summarizer" />
       </list>
     </recent_temporary>
   </component>
@@ -146,6 +142,8 @@
       <updated>1682602242471</updated>
       <workItem from="1682602243491" duration="1596000" />
       <workItem from="1682603858888" duration="3599000" />
+      <workItem from="1682768950996" duration="496000" />
+      <workItem from="1682769469377" duration="535000" />
     </task>
     <task id="LOCAL-00001" summary="Create multi module project">
       <created>1682602608041</created>
@@ -163,8 +161,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Create multi module project" />
     <option name="LAST_COMMIT_MESSAGE" value="Create multi module project" />
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ClipSum$summarizer.coverage" NAME="summarizer Coverage Results" MODIFIED="1682606890178" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/PythonModule" />
   </component>
 </project>
