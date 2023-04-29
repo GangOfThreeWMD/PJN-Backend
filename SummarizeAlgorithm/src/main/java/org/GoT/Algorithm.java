@@ -28,6 +28,8 @@ public class Algorithm {
         File javaDirectory = new File("").getCanonicalFile();
         jepConf.addIncludePaths(javaDirectory.getAbsolutePath()  + "/PythonModule");
         jepConf.addIncludePaths(pythonFolder);
+        jepConf.redirectStdout(System.out);
+        jepConf.redirectStdErr(System.err);
         SharedInterpreter.setConfig(jepConf);
     }
 
