@@ -81,6 +81,9 @@ def generate_summary(text, top_n=5, is_file_path=False):
     ranked_sentence = sorted(((scores[i],s) for i,s in enumerate(sentences)), reverse=True)
     print("Indexes of top ranked_sentence order are ", ranked_sentence)
 
+    if len(ranked_sentence) < top_n:
+        top_n = len(ranked_sentence)
+
     for i in range(top_n):
         summarize_text.append(" ".join(ranked_sentence[i][1]))
 
