@@ -12,7 +12,10 @@ public class Algorithm {
 
     public Algorithm() throws IOException {
         String pythonFolder = System.getenv("LD_LIBRARY_PATH");
-        String jepPath = pythonFolder + "/jep/libjep.jnilib";
+        if (pythonFolder == null) {
+            throw new UnsatisfiedLinkError("Wrong setup path to Python library");
+        }
+        String jepPath = pythonFolder + "/jep/libjep.jnilib"; // for OS X
         if (!Files.exists(Path.of(jepPath))){
             jepPath = pythonFolder + "/jep/libjep.so";
         }
