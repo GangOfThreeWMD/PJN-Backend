@@ -12,9 +12,16 @@ public class Algorithm {
 
     public Algorithm() throws IOException {
         String pythonFolder = System.getenv("LD_LIBRARY_PATH");
-        String jepPath = pythonFolder + "/jep/libjep.jnilib";
+        if (pythonFolder == null) {
+            throw new UnsatisfiedLinkError("Wrong setup path to Python library");
+        }
+        String jepPath = pythonFolder + "/jep/libjep.jnilib"; // for OS X
         if (!Files.exists(Path.of(jepPath))){
-            jepPath = pythonFolder + "/jep/libjep.so";
+            jepPath = pythonFolder + "/jep/libjep.so"; // for Linux
+        } if (!Files.exists(Path.of(jepPath))) {
+            jepPath = pythonFolder + "\\jep\\jep.dll"; // For Windows
+        } if (!Files.exists(Path.of(jepPath))) {
+            throw new UnsatisfiedLinkError("No found jep library. Install jep via pip");
         }
 
         //create the interpreter for python executing
@@ -23,6 +30,8 @@ public class Algorithm {
         File javaDirectory = new File("").getCanonicalFile();
         jepConf.addIncludePaths(javaDirectory.getAbsolutePath()  + "/PythonModule");
         jepConf.addIncludePaths(pythonFolder);
+        jepConf.redirectStdout(System.out);
+        jepConf.redirectStdErr(System.err);
         SharedInterpreter.setConfig(jepConf);
     }
 
