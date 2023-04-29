@@ -20,6 +20,8 @@ public class Algorithm {
             jepPath = pythonFolder + "/jep/libjep.so"; // for Linux
         } if (!Files.exists(Path.of(jepPath))) {
             jepPath = pythonFolder + "\\jep\\jep.dll"; // For Windows
+        } if (!Files.exists(Path.of(jepPath))) {
+            throw new UnsatisfiedLinkError("No found jep library. Install jep via pip");
         }
 
         //create the interpreter for python executing
