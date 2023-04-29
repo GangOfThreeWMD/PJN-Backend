@@ -17,7 +17,9 @@ public class Algorithm {
         }
         String jepPath = pythonFolder + "/jep/libjep.jnilib"; // for OS X
         if (!Files.exists(Path.of(jepPath))){
-            jepPath = pythonFolder + "/jep/libjep.so";
+            jepPath = pythonFolder + "/jep/libjep.so"; // for Linux
+        } if (!Files.exists(Path.of(jepPath))) {
+            jepPath = pythonFolder + "\\jep\\jep.dll"; // For Windows
         }
 
         //create the interpreter for python executing
