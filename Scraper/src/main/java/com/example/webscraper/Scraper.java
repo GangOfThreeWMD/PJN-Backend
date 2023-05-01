@@ -19,12 +19,12 @@ public class Scraper {
         this.algorithm = algorithm;
     }
 
-    public List<News> getBBCNewsArticles(String baseUrl) {
+    public List<News> getBBCNewsArticles(String baseUrl, int charsLimit) {
         var links = getLinksToArticles(baseUrl);
 
         List<News> news = new ArrayList<>();
         for (String link : links) {
-            Optional<News> possibleArticle = getBBCArticle(link);
+            Optional<News> possibleArticle = getBBCArticle(link, charsLimit);
             possibleArticle.ifPresent(news::add);
         }
 
@@ -64,13 +64,13 @@ public class Scraper {
         if ("wikipedia".equalsIgnoreCase(source)) {
             return getWikipediaArticle(link);
         } else if ("bbc".equalsIgnoreCase(source)) {
-            return getBBCArticle(link);
+            return getBBCArticle(link, 191);
         }
 
         return Optional.empty();
     }
 
-    public Optional<News> getBBCArticle(String link) {
+    public Optional<News> getBBCArticle(String link, int charsLimit) {
         System.out.println("link: " + link);
         try {
             Document document = Jsoup.connect(link).get();
@@ -91,7 +91,7 @@ public class Scraper {
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
             var summarize = algorithm.getSummarize(sb.toString());
-            summarize = shortenText(summarize, 191);
+            summarize = shortenText(summarize, charsLimit);
             return Optional.of(new News(heading, summarize, link));
 
         } catch (IOException | NullPointerException | IllegalArgumentException e) {
