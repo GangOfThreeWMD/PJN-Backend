@@ -91,11 +91,16 @@ public class Scraper {
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
             var summarize = algorithm.getSummarize(sb.toString());
+            summarize = shortenText(summarize, 191);
             return Optional.of(new News(heading, summarize, link));
 
         } catch (IOException | NullPointerException | IllegalArgumentException e) {
             return Optional.empty();
         }
+    }
+
+    private String shortenText(String text, int maxLength) {
+        return text.length() <= maxLength ? text : String.format("%s...", text.substring(0, maxLength));
     }
 
     public Optional<News> getWikipediaArticle(String link){
