@@ -1,4 +1,4 @@
-package com.example.webscraper;
+package org.GoT.webscraper.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

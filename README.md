@@ -1,4 +1,9 @@
 # ClipSum
+Project contain 4 module:
+1. PythonModule - contain python code for summarize text
+2. SummarizeAlgorith - Java code use Python algorithm and return summarize text
+3. Scraper - Program for Scrapping news from web
+4. Summarizer - Main program to get news
 
 ## Instruction installation with Intellij <a href="https://www.jetbrains.com/help/idea/getting-started.html"><img src="https://cdn3.emoji.gg/emojis/5827_intellij.png" width="20px" height="20px" alt="intellij logo"></a>:
 1. Install plugin Python [plugin install](https://www.jetbrains.com/help/idea/managing-plugins.html) , [Python support](https://www.jetbrains.com/help/idea/plugin-overview.html)

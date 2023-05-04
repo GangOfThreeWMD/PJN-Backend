@@ -1,6 +1,9 @@
-package com.example.webscraper;
+package org.GoT.webscraper.controller;
 
 
+import org.GoT.webscraper.model.News;
+import org.GoT.webscraper.exception.NotFoundArticle;
+import org.GoT.webscraper.service.Scraper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,8 +23,8 @@ public class ScraperController {
     }
 
     @GetMapping("/bbc")
-    public List<News> getBBCNewsArticles() {
-        return scraper.getBBCNewsArticles("https://www.bbc.com");
+    public List<News> getBBCNewsArticles(@RequestParam(name = "limit", required = false, defaultValue = "191") int charsLimit) {
+        return scraper.getBBCNewsArticles("https://www.bbc.com", charsLimit);
     }
 
     @GetMapping("/bbc/links")

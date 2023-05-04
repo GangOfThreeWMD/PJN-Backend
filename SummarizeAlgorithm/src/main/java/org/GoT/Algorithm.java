@@ -44,7 +44,7 @@ public class Algorithm {
             var path = subInterp.getValue("path", String.class);
             System.out.println(path);
             subInterp.set("textToSummarize", text);
-            subInterp.eval("output = sum.generate_summary(textToSummarize)");
+            subInterp.eval("output = sum.generate_summary(textToSummarize, 1)");
             return subInterp.getValue("output", String.class);
         } catch (JepException ex) {
             throw new JepException("Problem with Python side: "  + ex);

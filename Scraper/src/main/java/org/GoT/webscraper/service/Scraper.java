@@ -1,6 +1,9 @@
-package com.example.webscraper;
+package org.GoT.webscraper.service;
 
 import org.GoT.Algorithm;
+import org.GoT.webscraper.exception.IncorrectLink;
+import org.GoT.webscraper.model.News;
+import org.GoT.webscraper.model.Source;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,16 +18,27 @@ import java.util.*;
 public class Scraper {
     private final Algorithm algorithm;
 
+    private final ServiceLoader<NewsProvider> serviceLoader;
+
     public Scraper(Algorithm algorithm) {
         this.algorithm = algorithm;
+        this.serviceLoader = getAllProvider();
     }
 
-    public List<News> getBBCNewsArticles(String baseUrl) {
+    public ServiceLoader<NewsProvider> getAllProvider() {
+        return ServiceLoader.load(NewsProvider.class);
+    }
+
+    public List<News> getBBCNewsArticles(String baseUrl, int charsLimit) {
+        Optional<NewsProvider> bbcProvider = this.serviceLoader.stream().filter(p -> p.get().getSource().equals(Source.bbc)).map(ServiceLoader.Provider::get).findFirst();
+        if(bbcProvider.isPresent()) {
+           return bbcProvider.get().getArticles();
+        }
         var links = getLinksToArticles(baseUrl);
 
         List<News> news = new ArrayList<>();
         for (String link : links) {
-            Optional<News> possibleArticle = getBBCArticle(link);
+            Optional<News> possibleArticle = getBBCArticle(link, charsLimit);
             possibleArticle.ifPresent(news::add);
         }
 
@@ -64,13 +78,13 @@ public class Scraper {
         if ("wikipedia".equalsIgnoreCase(source)) {
             return getWikipediaArticle(link);
         } else if ("bbc".equalsIgnoreCase(source)) {
-            return getBBCArticle(link);
+            return getBBCArticle(link, 191);
         }
 
         return Optional.empty();
     }
 
-    public Optional<News> getBBCArticle(String link) {
+    public Optional<News> getBBCArticle(String link, int charsLimit) {
         System.out.println("link: " + link);
         try {
             Document document = Jsoup.connect(link).get();
@@ -91,11 +105,16 @@ public class Scraper {
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
             var summarize = algorithm.getSummarize(sb.toString());
+            summarize = shortenText(summarize, charsLimit);
             return Optional.of(new News(heading, summarize, link));
 
         } catch (IOException | NullPointerException | IllegalArgumentException e) {
             return Optional.empty();
         }
+    }
+
+    private String shortenText(String text, int maxLength) {
+        return text.length() <= maxLength ? text : String.format("%s...", text.substring(0, maxLength));
     }
 
     public Optional<News> getWikipediaArticle(String link){

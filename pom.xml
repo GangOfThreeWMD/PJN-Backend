@@ -25,6 +25,7 @@
     <modules>
         <module>Scraper</module>
         <module>SummarizeAlgorithm</module>
+        <module>Summarizer</module>
     </modules>
 
     <dependencies>

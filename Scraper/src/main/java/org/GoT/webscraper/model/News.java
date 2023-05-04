@@ -1,4 +1,4 @@
-package com.example.webscraper;
+package org.GoT.webscraper.model;
 
 public record News (
         String title,
