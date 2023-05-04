@@ -62,7 +62,7 @@ public class NBCProvider implements NewsProvider{
                 String link = e.attr("href");
                 if (!link.contains(getBaseUrl())) continue;
                 if (link.contains("/video/")) continue;
-                if (!link.contains(baseUrl + "/local"))
+                if (link.contains(baseUrl + "/local")) continue;
 
                 links.add(link);
             }
