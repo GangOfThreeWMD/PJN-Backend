@@ -38,4 +38,9 @@ public class SummarizerController {
         return new ResponseEntity<>(this.summarizeService.getSources(), HttpStatus.OK);
     }
 
+    @GetMapping("/length/{length}")
+    public void setLength(@PathVariable(value = "length") int length) {
+        this.summarizeService.setLength(length);
+    }
+
 }

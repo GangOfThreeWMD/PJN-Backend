@@ -22,10 +22,13 @@ public class SummarizeService {
 
     private final Algorithm summarizeAlgorithm;
 
+    private int lengthOfArticle;
+
 
     public SummarizeService(Scraper scraper, Algorithm algorithm) {
         this.serviceLoader = scraper.getAllProvider();
         this.summarizeAlgorithm = algorithm;
+        this.lengthOfArticle = 192;
     }
 
     @Cacheable(value = "articles")
@@ -35,7 +38,7 @@ public class SummarizeService {
             articleDtoList.addAll(newsProvider.getArticles()
                     .stream()
                     .map(
-                    a -> new ArticleDto(a.title(), shortenText(summarizeAlgorithm.getSummarize(a.content()), 192), a.link())
+                    a -> new ArticleDto(a.title(), shortenText(summarizeAlgorithm.getSummarize(a.content()), lengthOfArticle), a.link())
             ).toList());
         }
         return articleDtoList;
@@ -65,6 +68,11 @@ public class SummarizeService {
         return serviceLoader.stream()
                 .map( p -> p.get().getSource())
                 .toList();
+    }
+
+    @CacheEvict(value = "articles", allEntries = true)
+    public void setLength(int length) {
+        this.lengthOfArticle = length;
     }
 
     private String shortenText(String text, int maxLength) {
