@@ -1,2 +1,3 @@
 org.GoT.webscraper.service.BBCProvider
 org.GoT.webscraper.service.TheGuardianProvider
+org.GoT.webscraper.service.DigitalJournalProvider
