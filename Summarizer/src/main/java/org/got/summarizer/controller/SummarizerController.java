@@ -29,13 +29,8 @@ public class SummarizerController {
     }
 
     @GetMapping("/refresh")
-    public void refresh(@RequestParam(required = false) List<String> src) {
-        if(src == null){
-            this.summarizeService.forceRefresh();
-            return;
-        }
-        List<Source> sources = src.stream().map(s -> Source.valueOf(s.toLowerCase())).toList();
-        this.summarizeService.forceRefresh(sources);
+    public void refresh() {
+        this.summarizeService.forceRefresh();
     }
 
     @GetMapping("/sources")

@@ -5,6 +5,10 @@ import org.GoT.webscraper.service.NewsProvider;
 import org.GoT.webscraper.service.Scraper;
 import org.got.summarizer.dto.ArticleDto;
 import org.GoT.webscraper.model.Source;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,6 +16,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 @Service
+@CacheConfig(cacheNames={"articles"})
 public class SummarizeService {
     private final ServiceLoader<NewsProvider> serviceLoader;
 
@@ -23,38 +28,36 @@ public class SummarizeService {
         this.summarizeAlgorithm = algorithm;
     }
 
+    @Cacheable(value = "articles")
     public List<ArticleDto> getSummaries() {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for(NewsProvider newsProvider: serviceLoader) {
             articleDtoList.addAll(newsProvider.getArticles()
                     .stream()
                     .map(
-                    a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.title()), a.link())
+                    a -> new ArticleDto(a.title(), shortenText(summarizeAlgorithm.getSummarize(a.content()), 192), a.link())
             ).toList());
         }
-
         return articleDtoList;
     }
 
     public List<ArticleDto> getSummaries(Source source) {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for(NewsProvider newsProvider: serviceLoader) {
-            if (! source.toString().equals(newsProvider.getSource().toString()))
+            if (!source.toString().equals(newsProvider.getSource().toString()))
                 continue;
             articleDtoList.addAll(newsProvider.getArticles()
                     .stream()
                     .map(
-                            a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.title()), a.link())
+                            a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.content()), a.link())
                     ).toList());
         }
         return articleDtoList;
     }
 
+    @CacheEvict(value = "articles", allEntries = true)
+    @Scheduled(fixedDelay = 1440000)
     public void forceRefresh() {
-
-    }
-
-    public void forceRefresh(List<Source> sources) {
 
     }
 
@@ -62,5 +65,9 @@ public class SummarizeService {
         return serviceLoader.stream()
                 .map( p -> p.get().getSource())
                 .toList();
+    }
+
+    private String shortenText(String text, int maxLength) {
+        return text.length() <= maxLength ? text : String.format("%s...", text.substring(0, maxLength));
     }
 }
