@@ -1,4 +1,4 @@
-package com.example.webscraper;
+package org.GoT.webscraper;
 
 import org.GoT.Algorithm;
 import org.springframework.boot.SpringApplication;

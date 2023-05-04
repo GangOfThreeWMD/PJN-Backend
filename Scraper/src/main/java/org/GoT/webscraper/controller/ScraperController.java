@@ -1,6 +1,9 @@
-package com.example.webscraper;
+package org.GoT.webscraper.controller;
 
 
+import org.GoT.webscraper.model.News;
+import org.GoT.webscraper.exception.NotFoundArticle;
+import org.GoT.webscraper.service.Scraper;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

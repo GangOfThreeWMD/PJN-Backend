@@ -1,7 +1,7 @@
 package org.got.summarizer.controller;
 
 import org.got.summarizer.dto.ArticleDto;
-import org.got.summarizer.dto.Source;
+import org.GoT.webscraper.model.Source;
 import org.got.summarizer.service.SummarizeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +42,5 @@ public class SummarizerController {
     public ResponseEntity<List<Source>> getSourcesList() {
         return new ResponseEntity<>(this.summarizeService.getSources(), HttpStatus.OK);
     }
-
 
 }

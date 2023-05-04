@@ -1,6 +1,9 @@
-package com.example.webscraper;
+package org.GoT.webscraper.service;
 
 import org.GoT.Algorithm;
+import org.GoT.webscraper.exception.IncorrectLink;
+import org.GoT.webscraper.model.News;
+import org.GoT.webscraper.model.Source;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,11 +18,22 @@ import java.util.*;
 public class Scraper {
     private final Algorithm algorithm;
 
+    private final ServiceLoader<NewsProvider> serviceLoader;
+
     public Scraper(Algorithm algorithm) {
         this.algorithm = algorithm;
+        this.serviceLoader = getAllProvider();
+    }
+
+    public ServiceLoader<NewsProvider> getAllProvider() {
+        return ServiceLoader.load(NewsProvider.class);
     }
 
     public List<News> getBBCNewsArticles(String baseUrl, int charsLimit) {
+        Optional<NewsProvider> bbcProvider = this.serviceLoader.stream().filter(p -> p.get().getSource().equals(Source.bbc)).map(ServiceLoader.Provider::get).findFirst();
+        if(bbcProvider.isPresent()) {
+           return bbcProvider.get().getArticles();
+        }
         var links = getLinksToArticles(baseUrl);
 
         List<News> news = new ArrayList<>();

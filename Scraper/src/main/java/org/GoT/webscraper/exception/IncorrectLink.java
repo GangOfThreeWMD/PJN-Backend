@@ -1,4 +1,4 @@
-package com.example.webscraper;
+package org.GoT.webscraper.exception;
 
 public class IncorrectLink extends RuntimeException {
     public IncorrectLink(String message) {
