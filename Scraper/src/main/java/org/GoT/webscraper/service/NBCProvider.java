@@ -63,6 +63,8 @@ public class NBCProvider implements NewsProvider{
                 if (!link.contains(getBaseUrl())) continue;
                 if (link.contains("/video/")) continue;
                 if (link.contains(baseUrl + "/local")) continue;
+                if (link.contains("/information")) continue;
+                if (link.contains("/pages")) continue;
 
                 links.add(link);
             }
