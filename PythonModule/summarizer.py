@@ -88,6 +88,7 @@ def generate_summary(text, top_n=5, is_file_path=False, min_length=128):
         if len("".join(summarize_text)) >= min_length:
             break
         summarize_text.append(" ".join(ranked_sentence[i][1]))
+        summarize_text.append(". ")
 
     # Step 5 - Offcourse, output the summarize text
     return "".join(summarize_text)
