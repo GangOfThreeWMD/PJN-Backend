@@ -1,9 +1,9 @@
-package org.got.summarizer.service;
+package org.GoT.summarizer.service;
 
 import org.GoT.Algorithm;
+import org.GoT.summarizer.dto.ArticleDto;
 import org.GoT.webscraper.service.NewsProvider;
 import org.GoT.webscraper.service.Scraper;
-import org.got.summarizer.dto.ArticleDto;
 import org.GoT.webscraper.model.Source;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;

@@ -1,8 +1,8 @@
-package org.got.summarizer.controller;
+package org.GoT.summarizer.controller;
 
-import org.got.summarizer.dto.ArticleDto;
+import org.GoT.summarizer.dto.ArticleDto;
+import org.GoT.summarizer.service.SummarizeService;
 import org.GoT.webscraper.model.Source;
-import org.got.summarizer.service.SummarizeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package org.got.summarizer.dto;
+package org.GoT.summarizer.dto;
 
 public record ArticleDto (
         String title,

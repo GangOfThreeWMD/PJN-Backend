@@ -1,4 +1,4 @@
-package org.got.summarizer;
+package org.GoT.summarizer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
