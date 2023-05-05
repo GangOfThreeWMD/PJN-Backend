@@ -1,4 +1,4 @@
-package org.got.summarizer;
+package org.GoT.summarizer;
 
 import org.GoT.webscraper.service.Scraper;
 import org.GoT.Algorithm;

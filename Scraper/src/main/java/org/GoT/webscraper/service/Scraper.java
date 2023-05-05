@@ -32,7 +32,7 @@ public class Scraper {
     public List<News> getBBCNewsArticles(String baseUrl, int charsLimit) {
         Optional<NewsProvider> bbcProvider = this.serviceLoader.stream().filter(p -> p.get().getSource().equals(Source.bbc)).map(ServiceLoader.Provider::get).findFirst();
         if(bbcProvider.isPresent()) {
-           return bbcProvider.get().getArticles();
+           return bbcProvider.get().getAllArticles();
         }
         var links = getLinksToArticles(baseUrl);
 

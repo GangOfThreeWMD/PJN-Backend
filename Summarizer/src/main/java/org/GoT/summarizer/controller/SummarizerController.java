@@ -1,8 +1,8 @@
-package org.got.summarizer.controller;
+package org.GoT.summarizer.controller;
 
-import org.got.summarizer.dto.ArticleDto;
+import org.GoT.summarizer.dto.ArticleDto;
+import org.GoT.summarizer.service.SummarizeService;
 import org.GoT.webscraper.model.Source;
-import org.got.summarizer.service.SummarizeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +19,22 @@ public class SummarizerController {
     }
 
     @GetMapping( value ={"", "/{src}"})
-    public ResponseEntity<List<ArticleDto>> getSummaries(@PathVariable(required = false) String src) {
-        if (src == null) {
+    public ResponseEntity<List<ArticleDto>> getSummaries(@PathVariable(required = false) String src,
+                                                         @RequestParam(required = false) String limit) {
+        if (src == null && limit == null) {
            return new ResponseEntity<>(this.summarizeService.getSummaries(), HttpStatus.OK);
         }
-        Source source = Source.valueOf(src.toLowerCase());
 
-        return new ResponseEntity<>(this.summarizeService.getSummaries(source), HttpStatus.OK);
+        if (src != null) {
+            Source source = Source.valueOf(src.toLowerCase());
+            if (limit == null) {
+                return new ResponseEntity<>(this.summarizeService.getSummaries(source), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(this.summarizeService.getSummaries(source, Long.parseLong(limit)), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(this.summarizeService.getSummaries(Long.parseLong(limit)), HttpStatus.OK);
     }
 
     @GetMapping("/refresh")

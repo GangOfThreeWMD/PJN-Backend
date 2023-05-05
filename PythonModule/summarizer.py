@@ -62,7 +62,7 @@ def build_similarity_matrix(sentences, stop_words):
     return similarity_matrix
 
 
-def generate_summary(text, top_n=5, is_file_path=False):
+def generate_summary(text, top_n=5, is_file_path=False, min_length=128):
     nltk.download("stopwords")
     stop_words = stopwords.words('english')
     summarize_text = []
@@ -85,7 +85,10 @@ def generate_summary(text, top_n=5, is_file_path=False):
         top_n = len(ranked_sentence)
 
     for i in range(top_n):
+        if len("".join(summarize_text)) >= min_length:
+            break
         summarize_text.append(" ".join(ranked_sentence[i][1]))
+        summarize_text.append(". ")
 
     # Step 5 - Offcourse, output the summarize text
     return "".join(summarize_text)
