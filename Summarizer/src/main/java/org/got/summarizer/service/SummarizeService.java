@@ -8,6 +8,7 @@ import org.GoT.webscraper.model.Source;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 @Service
-@CacheConfig(cacheNames={"allArticles", "selectedArticles"})
+@CacheConfig(cacheNames={"allArticles", "selectedArticles", "limitArticles", "limitSelectedArticles"})
 public class SummarizeService {
     private final ServiceLoader<NewsProvider> serviceLoader;
 
@@ -29,6 +30,15 @@ public class SummarizeService {
         this.serviceLoader = scraper.getAllProvider();
         this.summarizeAlgorithm = algorithm;
         this.lengthOfArticle = 192;
+    }
+
+    @Cacheable(value = "limitArticles", key = "#limit")
+    public List<ArticleDto> getSummaries(long limit) {
+        List<ArticleDto> articleDtoList = new ArrayList<>();
+        for(NewsProvider newsProvider: serviceLoader) {
+            articleDtoList.addAll(getArticles(newsProvider, limit));
+        }
+        return articleDtoList;
     }
 
     @Cacheable(value = "allArticles")
@@ -51,21 +61,42 @@ public class SummarizeService {
         return articleDtoList;
     }
 
+    @Cacheable(value = "limitSelectedArticles", key = "{#source, #limit}")
+    public List<ArticleDto> getSummaries(Source source, long limit) {
+        List<ArticleDto> articleDtoList = new ArrayList<>();
+        for(NewsProvider newsProvider: serviceLoader) {
+            if (!source.equals(newsProvider.getSource()))
+                continue;
+            articleDtoList.addAll(getArticles(newsProvider, limit));
+        }
+        return articleDtoList;
+    }
+
     private List<ArticleDto> getArticles(NewsProvider newsProvider) {
-        return newsProvider.getArticles()
+        return newsProvider.getAllArticles()
                 .stream()
                 .map(
                         a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.content()), a.link())
                 ).toList();
     }
 
-    @CacheEvict(value = {"allArticles", "selectedArticles"}, allEntries = true)
+    private List<ArticleDto> getArticles(NewsProvider newsProvider, long limit) {
+        return newsProvider.getArticles(limit)
+                .stream()
+                .map(
+                        a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.content()), a.link())
+                ).toList();
+    }
+
+    @CacheEvict(value = {"allArticles", "selectedArticles", "limitSelectedArticles", "limitArticles"}, allEntries = true)
     @Scheduled(fixedDelay = 1440000)
     public void forceRefresh() {
 
     }
 
-    @CacheEvict(value = "selectedArticles", key = "#source")
+    @Caching(evict = {
+            @CacheEvict(value = "limitSelectedArticles", allEntries = true),
+            @CacheEvict(value = "selectedArticles", key = "#source") })
     public void forceRefresh(Source source){
 
     }
@@ -76,7 +107,7 @@ public class SummarizeService {
                 .toList();
     }
 
-    @CacheEvict(value = "allArticles", allEntries = true)
+    @CacheEvict(value = {"allArticles", "selectedArticles", "limitSelectedArticles", "limitArticles"}, allEntries = true)
     public void setLength(int length) {
         this.lengthOfArticle = length;
     }

@@ -19,13 +19,22 @@ public class SummarizerController {
     }
 
     @GetMapping( value ={"", "/{src}"})
-    public ResponseEntity<List<ArticleDto>> getSummaries(@PathVariable(required = false) String src) {
-        if (src == null) {
+    public ResponseEntity<List<ArticleDto>> getSummaries(@PathVariable(required = false) String src,
+                                                         @RequestParam(required = false) String limit) {
+        if (src == null && limit == null) {
            return new ResponseEntity<>(this.summarizeService.getSummaries(), HttpStatus.OK);
         }
-        Source source = Source.valueOf(src.toLowerCase());
 
-        return new ResponseEntity<>(this.summarizeService.getSummaries(source), HttpStatus.OK);
+        if (src != null) {
+            Source source = Source.valueOf(src.toLowerCase());
+            if (limit == null) {
+                return new ResponseEntity<>(this.summarizeService.getSummaries(source), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(this.summarizeService.getSummaries(source, Long.parseLong(limit)), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(this.summarizeService.getSummaries(Long.parseLong(limit)), HttpStatus.OK);
     }
 
     @GetMapping("/refresh")
