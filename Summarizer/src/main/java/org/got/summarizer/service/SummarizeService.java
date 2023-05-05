@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 @Service
@@ -35,11 +36,7 @@ public class SummarizeService {
     public List<ArticleDto> getSummaries() {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for(NewsProvider newsProvider: serviceLoader) {
-            articleDtoList.addAll(newsProvider.getArticles()
-                    .stream()
-                    .map(
-                    a -> new ArticleDto(a.title(), shortenText(summarizeAlgorithm.getSummarize(a.content()), lengthOfArticle), a.link())
-            ).toList());
+            articleDtoList.addAll(getArticles(newsProvider));
         }
         return articleDtoList;
     }
@@ -47,15 +44,19 @@ public class SummarizeService {
     public List<ArticleDto> getSummaries(Source source) {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for(NewsProvider newsProvider: serviceLoader) {
-            if (!source.toString().equals(newsProvider.getSource().toString()))
+            if (!source.equals(newsProvider.getSource()))
                 continue;
-            articleDtoList.addAll(newsProvider.getArticles()
-                    .stream()
-                    .map(
-                            a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.content()), a.link())
-                    ).toList());
+            articleDtoList.addAll(getArticles(newsProvider));
         }
         return articleDtoList;
+    }
+
+    private List<ArticleDto> getArticles(NewsProvider newsProvider) {
+        return newsProvider.getArticles()
+                .stream()
+                .map(
+                        a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.content()), a.link())
+                ).toList();
     }
 
     @CacheEvict(value = "articles", allEntries = true)
