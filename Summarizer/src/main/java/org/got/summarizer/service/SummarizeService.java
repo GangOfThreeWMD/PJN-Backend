@@ -76,7 +76,10 @@ public class SummarizeService {
         return newsProvider.getAllArticles()
                 .stream()
                 .map(
-                        a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.content()), a.link())
+                        a -> new ArticleDto(
+                                a.title(),
+                                shortenText(summarizeAlgorithm.getSummarize(a.content()), this.lengthOfArticle),
+                                a.link())
                 ).toList();
     }
 
@@ -84,7 +87,10 @@ public class SummarizeService {
         return newsProvider.getArticles(limit)
                 .stream()
                 .map(
-                        a -> new ArticleDto(a.title(), summarizeAlgorithm.getSummarize(a.content()), a.link())
+                        a -> new ArticleDto(
+                                a.title(),
+                                shortenText(summarizeAlgorithm.getSummarize(a.content()), this.lengthOfArticle),
+                                a.link())
                 ).toList();
     }
 
