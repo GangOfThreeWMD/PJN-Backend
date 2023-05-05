@@ -33,6 +33,11 @@ public class SummarizerController {
         this.summarizeService.forceRefresh();
     }
 
+    @GetMapping("/refresh/{source}")
+    public void refresh(@PathVariable Source source) {
+        this.summarizeService.forceRefresh(source);
+    }
+
     @GetMapping("/sources")
     public ResponseEntity<List<Source>> getSourcesList() {
         return new ResponseEntity<>(this.summarizeService.getSources(), HttpStatus.OK);
