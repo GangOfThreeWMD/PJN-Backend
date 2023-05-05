@@ -13,11 +13,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ServiceLoader;
 
 @Service
-@CacheConfig(cacheNames={"articles"})
+@CacheConfig(cacheNames={"allArticles", "selectedArticles"})
 public class SummarizeService {
     private final ServiceLoader<NewsProvider> serviceLoader;
 
@@ -32,7 +31,7 @@ public class SummarizeService {
         this.lengthOfArticle = 192;
     }
 
-    @Cacheable(value = "articles")
+    @Cacheable(value = "allArticles")
     public List<ArticleDto> getSummaries() {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for(NewsProvider newsProvider: serviceLoader) {
@@ -41,6 +40,7 @@ public class SummarizeService {
         return articleDtoList;
     }
 
+    @Cacheable(value = "selectedArticles", key = "#source")
     public List<ArticleDto> getSummaries(Source source) {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for(NewsProvider newsProvider: serviceLoader) {
@@ -59,9 +59,14 @@ public class SummarizeService {
                 ).toList();
     }
 
-    @CacheEvict(value = "articles", allEntries = true)
+    @CacheEvict(value = {"allArticles", "selectedArticles"}, allEntries = true)
     @Scheduled(fixedDelay = 1440000)
     public void forceRefresh() {
+
+    }
+
+    @CacheEvict(value = "selectedArticles", key = "#source")
+    public void forceRefresh(Source source){
 
     }
 
@@ -71,7 +76,7 @@ public class SummarizeService {
                 .toList();
     }
 
-    @CacheEvict(value = "articles", allEntries = true)
+    @CacheEvict(value = "allArticles", allEntries = true)
     public void setLength(int length) {
         this.lengthOfArticle = length;
     }
