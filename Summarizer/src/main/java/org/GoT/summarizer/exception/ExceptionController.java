@@ -1,5 +1,6 @@
 package org.GoT.summarizer.exception;
 
+import org.GoT.webscraper.exception.IncorrectLink;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,5 +17,10 @@ public class ExceptionController {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleWrongProvider(IllegalArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Wrong provider: %s", ex.getMessage()));
+    }
+
+    @ExceptionHandler(IncorrectLink.class)
+    public ResponseEntity<String> handleWrongLink(IncorrectLink ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Problem with link: %s", ex.getMessage()));
     }
 }
