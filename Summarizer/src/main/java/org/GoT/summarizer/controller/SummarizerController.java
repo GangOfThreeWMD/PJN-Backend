@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/summarizer/api/v1")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SummarizerController {
     private final SummarizeService summarizeService;
 
@@ -19,22 +21,21 @@ public class SummarizerController {
     }
 
     @GetMapping( value ={"", "/{src}"})
-    public ResponseEntity<List<ArticleDto>> getSummaries(@PathVariable(required = false) String src,
-                                                         @RequestParam(required = false) String limit) {
-        if (src == null && limit == null) {
+    public ResponseEntity<List<ArticleDto>> getSummaries(@PathVariable(required = false) Optional<Source> src,
+                                                         @RequestParam(required = false) Optional<Long> limit) {
+        if (src.isEmpty() && limit.isEmpty()) {
            return new ResponseEntity<>(this.summarizeService.getSummaries(), HttpStatus.OK);
         }
 
-        if (src != null) {
-            Source source = Source.valueOf(src.toLowerCase());
-            if (limit == null) {
-                return new ResponseEntity<>(this.summarizeService.getSummaries(source), HttpStatus.OK);
+        if (src.isPresent()) {
+            if (limit.isEmpty()) {
+                return new ResponseEntity<>(this.summarizeService.getSummaries(src.get()), HttpStatus.OK);
             }
             else {
-                return new ResponseEntity<>(this.summarizeService.getSummaries(source, Long.parseLong(limit)), HttpStatus.OK);
+                return new ResponseEntity<>(this.summarizeService.getSummaries(src.get(), limit.get()), HttpStatus.OK);
             }
         }
-        return new ResponseEntity<>(this.summarizeService.getSummaries(Long.parseLong(limit)), HttpStatus.OK);
+        return new ResponseEntity<>(this.summarizeService.getSummaries(limit.get()), HttpStatus.OK);
     }
 
     @GetMapping("/refresh")
