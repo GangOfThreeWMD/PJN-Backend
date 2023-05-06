@@ -1,7 +1,10 @@
 package org.GoT.summarizer.service;
 
+import jep.JepException;
 import org.GoT.Algorithm;
 import org.GoT.summarizer.dto.ArticleDto;
+import org.GoT.webscraper.exception.IncorrectLink;
+import org.GoT.webscraper.model.News;
 import org.GoT.webscraper.service.NewsProvider;
 import org.GoT.webscraper.service.Scraper;
 import org.GoT.webscraper.model.Source;
@@ -45,7 +48,11 @@ public class SummarizeService {
     public List<ArticleDto> getSummaries() {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for(NewsProvider newsProvider: serviceLoader) {
-            articleDtoList.addAll(getArticles(newsProvider));
+            try {
+                articleDtoList.addAll(getArticles(newsProvider));
+            } catch (IncorrectLink ex) {
+                System.err.printf("Problem with link: %s%n", ex.getMessage());
+            }
         }
         return articleDtoList;
     }
@@ -73,25 +80,32 @@ public class SummarizeService {
     }
 
     private List<ArticleDto> getArticles(NewsProvider newsProvider) {
-        return newsProvider.getAllArticles()
-                .stream()
-                .map(
-                        a -> new ArticleDto(
-                                a.title(),
-                                shortenText(summarizeAlgorithm.getSummarize(a.content()), this.lengthOfArticle),
-                                a.link())
-                ).toList();
+        List<News> newsList = newsProvider.getAllArticles();
+        return transformNewsToArticles(newsList);
     }
 
     private List<ArticleDto> getArticles(NewsProvider newsProvider, long limit) {
-        return newsProvider.getArticles(limit)
-                .stream()
-                .map(
-                        a -> new ArticleDto(
-                                a.title(),
-                                shortenText(summarizeAlgorithm.getSummarize(a.content()), this.lengthOfArticle),
-                                a.link())
-                ).toList();
+        List<News> newsList = newsProvider.getArticles(limit);
+        return transformNewsToArticles(newsList);
+    }
+
+    private List<ArticleDto> transformNewsToArticles(List<News> newsList) {
+        List<ArticleDto> articleDtoList = new ArrayList<>();
+        for (News news: newsList) {
+            try {
+                articleDtoList.add(getArticle(news));
+            } catch (JepException jepException) {
+                System.err.printf("Problem with article: %s%n", jepException.getMessage());
+            }
+        }
+        return articleDtoList;
+    }
+
+    private ArticleDto getArticle(News news) {
+        return new ArticleDto(
+                news.title(),
+                shortenText(summarizeAlgorithm.getSummarize(news.content()), this.lengthOfArticle),
+                news.link());
     }
 
     @CacheEvict(value = {"allArticles", "selectedArticles", "limitSelectedArticles", "limitArticles"}, allEntries = true)
