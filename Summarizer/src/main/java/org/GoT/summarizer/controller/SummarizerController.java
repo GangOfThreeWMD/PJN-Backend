@@ -1,5 +1,6 @@
 package org.GoT.summarizer.controller;
 
+import io.micrometer.common.util.StringUtils;
 import org.GoT.summarizer.dto.ArticleDto;
 import org.GoT.summarizer.service.SummarizeService;
 import org.GoT.webscraper.model.Source;
@@ -58,4 +59,12 @@ public class SummarizerController {
         this.summarizeService.setLength(length);
     }
 
+
+    @PostMapping()
+    public ResponseEntity<String> summarizeText(@RequestBody String text) {
+        if(StringUtils.isBlank(text)) {
+            throw new IllegalArgumentException("Text is empty!");
+        }
+        return new ResponseEntity<>(this.summarizeService.summarizeText(text), HttpStatus.CREATED);
+    }
 }

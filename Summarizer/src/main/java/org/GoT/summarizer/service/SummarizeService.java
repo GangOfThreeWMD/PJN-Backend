@@ -132,6 +132,10 @@ public class SummarizeService {
         this.lengthOfArticle = length;
     }
 
+    public String summarizeText(String textToTranslate) {
+        return this.summarizeAlgorithm.getSummarize(textToTranslate);
+    }
+
     private String shortenText(String text, int maxLength) {
         return text.length() <= maxLength ? text : String.format("%s...", text.substring(0, maxLength));
     }
