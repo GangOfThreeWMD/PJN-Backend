@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Algorithm {
+    private boolean firstRun;
 
     public Algorithm() throws IOException {
         String pythonFolder = System.getenv("LD_LIBRARY_PATH");
@@ -33,16 +34,18 @@ public class Algorithm {
         jepConf.redirectStdout(System.out);
         jepConf.redirectStdErr(System.err);
         SharedInterpreter.setConfig(jepConf);
+
+        this.firstRun = true;
     }
 
     public String getSummarize(String text) throws JepException{
         try(SharedInterpreter subInterp = new SharedInterpreter()){
             // run each function from the .py doc I
             subInterp.eval("import summarizer as sum");
-            subInterp.eval("import pathlib");
-            subInterp.eval("path = pathlib.Path().resolve()");
-            var path = subInterp.getValue("path", String.class);
-            System.out.println(path);
+            if(firstRun) {
+                subInterp.eval("sum.init()");
+                firstRun = false;
+            }
             subInterp.set("textToSummarize", text);
             subInterp.eval("output = sum.generate_summary(textToSummarize, 5)");
             return subInterp.getValue("output", String.class);
