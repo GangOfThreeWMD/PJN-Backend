@@ -47,4 +47,9 @@ public class ScraperController {
 
         return this.scraper.getNews(source.get());
     }
+
+    @GetMapping("/all")
+    public List<News> getNewsArticles() {
+        return this.scraper.getNews();
+    }
 }
