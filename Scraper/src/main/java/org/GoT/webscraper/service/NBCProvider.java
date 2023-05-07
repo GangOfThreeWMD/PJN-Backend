@@ -43,12 +43,6 @@ public class NBCProvider implements NewsProvider{
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
 
-//            Element pictureElement = articleParts.first().getElementsByTag("picture").first();
-
-//            if (pictureElement == null) {
-//                pictureElement = document.getElementsByTag("article").first().getElementsByTag("picture").first();
-//            }
-
             Element pictureElement = document.getElementsByClass("article-hero__main-image").first();
             if (pictureElement == null) {
                 pictureElement = articleParts.first().getElementsByTag("picture").first();
