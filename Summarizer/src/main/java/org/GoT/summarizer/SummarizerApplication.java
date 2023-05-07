@@ -20,8 +20,8 @@ public class SummarizerApplication {
 	}
 
 	@Bean
-	public Scraper getScrapper() throws IOException {
-		return new Scraper(getSummarizeAlgorithm());
+	public Scraper getScrapper() {
+		return new Scraper();
 	}
 
 	@Bean
