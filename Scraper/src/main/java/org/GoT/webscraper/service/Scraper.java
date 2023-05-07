@@ -1,9 +1,8 @@
 package org.GoT.webscraper.service;
 
-import org.GoT.webscraper.exception.IncorrectLink;
+import org.GoT.webscraper.exception.IncorrectSource;
 import org.GoT.webscraper.model.News;
 import org.GoT.webscraper.model.Source;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -44,85 +43,41 @@ public class Scraper {
         return articleDtoList;
     }
 
-    public List<News> getBBCNewsArticles(String baseUrl) {
-        Optional<NewsProvider> bbcProvider = this.serviceLoader.stream().filter(p -> p.get().getSource().equals(Source.bbc)).map(ServiceLoader.Provider::get).findFirst();
-        if(bbcProvider.isPresent()) {
-           return bbcProvider.get().getAllArticles();
-        }
-        var links = getLinksToArticles(baseUrl);
+    public Set<String> getLinksToArticles(Source source) {
+        Optional<ServiceLoader.Provider<NewsProvider>> possibleNewsProviderProvider = this.serviceLoader.stream()
+                .filter(p -> p.get().getSource().equals(source))
+                .findFirst();
 
-        List<News> news = new ArrayList<>();
-        for (String link : links) {
-            Optional<News> possibleArticle = getBBCArticle(link);
-            possibleArticle.ifPresent(news::add);
-        }
-
-        return news;
-    }
-
-    public Set<String> getLinksToArticles(String baseUrl) {
-        baseUrl = baseUrl.replaceFirst("/*$", "");
-        try {
-            Document document = Jsoup.connect(baseUrl + "/news").get();
-
-            Elements aElements = document.getElementsByTag("a");
-
-            Set<String> links = new HashSet<>();
-            for (Element e : aElements) {
-                String link = e.attr("href");
-
-                if (!link.contains("/news/")) continue;
-
-                if (!link.contains(baseUrl)) {
-                    link = baseUrl + link;
-                }
-
-                links.add(link);
-            }
-
-            return links;
-
-        } catch (HttpStatusException e) {
-            throw new IncorrectLink(e.getUrl());
-        } catch (IOException e) {
-            throw new IncorrectLink(e.getMessage());
+        if (possibleNewsProviderProvider.isPresent()) {
+            ServiceLoader.Provider<NewsProvider> newsProvider = possibleNewsProviderProvider.get();
+            return newsProvider.get().getLinksToArticles(newsProvider.get().getBaseUrl());
+        } else {
+            throw new IncorrectSource(String.format("Source %s doesn't exist", source.toString()));
         }
     }
 
-    public Optional<News> retrieveArticle(String link, String source) {
-        if ("wikipedia".equalsIgnoreCase(source)) {
+    public Optional<News> retrieveArticle(String link, String sourceString) {
+        if ("wikipedia".equalsIgnoreCase(sourceString)) {
             return getWikipediaArticle(link);
-        } else if ("bbc".equalsIgnoreCase(source)) {
-            return getBBCArticle(link);
         }
-
-        return Optional.empty();
+        try {
+            Source source = Source.valueOf(sourceString);
+            return getArticle(link, source);
+        } catch (Exception ex) {
+            return Optional.empty();
+        }
     }
 
-    public Optional<News> getBBCArticle(String link) {
-        System.out.println("link: " + link);
-        try {
-            Document document = Jsoup.connect(link).get();
+    public Optional<News> getArticle(String link, Source source) {
+        Optional<ServiceLoader.Provider<NewsProvider>> possibleNewsProviderProvider = this.serviceLoader.stream()
+                .filter(p -> p.get().getSource().equals(source))
+                .findFirst();
 
-            Element possibleHeading = document.getElementById("main-heading");
-            if(possibleHeading == null)
-                return Optional.empty();
-            String heading = possibleHeading.text();
-
-            Elements textBlocks = document.getElementsByAttributeValue("data-component", "text-block");
-
-            StringBuilder sb = new StringBuilder();
-            for (Element textBlock : textBlocks) {
-                sb.append(textBlock.getElementsByTag("p").get(0).text()).append(" ");
-            }
-
-            if(sb.isEmpty())
-                return Optional.empty();
-            sb.deleteCharAt(sb.length() - 1); // remove space in end of content
-            return Optional.of(new News(heading, sb.toString(), link));
-
-        } catch (IOException | NullPointerException | IllegalArgumentException e) {
-            return Optional.empty();
+        if (possibleNewsProviderProvider.isPresent()) {
+            ServiceLoader.Provider<NewsProvider> newsProvider = possibleNewsProviderProvider.get();
+            return newsProvider.get().getArticle(link);
+        } else {
+            throw new IncorrectSource(String.format("Source %s doesn't exist", source.toString()));
         }
     }
 

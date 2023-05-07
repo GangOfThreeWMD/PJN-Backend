@@ -22,14 +22,13 @@ public class ScraperController {
         this.scraper = scraper;
     }
 
-    @GetMapping("/bbc")
-    public List<News> getBBCNewsArticles() {
-        return scraper.getBBCNewsArticles("https://www.bbc.com");
-    }
+    @GetMapping("/{source}/links")
+    public Set<String> getBBCNewsLinks(@PathVariable Optional<Source> source) {
+        if(source.isEmpty()) {
+            throw new IncorrectSource("Insert wrong provider");
+        }
 
-    @GetMapping("/bbc/links")
-    public Set<String> getBBCNewsLinks() {
-        return scraper.getLinksToArticles("https://www.bbc.com");
+        return scraper.getLinksToArticles(source.get());
     }
 
     @GetMapping
