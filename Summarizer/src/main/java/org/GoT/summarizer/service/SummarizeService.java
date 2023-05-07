@@ -102,10 +102,17 @@ public class SummarizeService {
     }
 
     private ArticleDto getArticle(News news) {
+        if (news.getUrlToImage().isPresent()) {
+            return new ArticleDto(
+                    news.getTitle(),
+                    shortenText(summarizeAlgorithm.getSummarize(news.getContent()), this.lengthOfArticle),
+                    news.getLink(),
+                    news.getUrlToImage().get());
+        }
         return new ArticleDto(
-                news.title(),
-                shortenText(summarizeAlgorithm.getSummarize(news.content()), this.lengthOfArticle),
-                news.link());
+                news.getTitle(),
+                shortenText(summarizeAlgorithm.getSummarize(news.getContent()), this.lengthOfArticle),
+                news.getLink());
     }
 
     @CacheEvict(value = {"allArticles", "selectedArticles", "limitSelectedArticles", "limitArticles"}, allEntries = true)
