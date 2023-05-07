@@ -1,5 +1,6 @@
 package org.GoT.summarizer.exception;
 
+import jep.JepException;
 import org.GoT.webscraper.exception.IncorrectLink;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,16 @@ public class ExceptionController {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleWrongProvider(IllegalArgumentException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Wrong provider: %s", ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format(ex.getMessage()));
     }
 
     @ExceptionHandler(IncorrectLink.class)
     public ResponseEntity<String> handleWrongLink(IncorrectLink ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Problem with link: %s", ex.getMessage()));
+    }
+
+    @ExceptionHandler(JepException.class)
+    public ResponseEntity<String> handleAlgorithmError(JepException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Problem with summarize: %s", ex.getMessage()));
     }
 }
