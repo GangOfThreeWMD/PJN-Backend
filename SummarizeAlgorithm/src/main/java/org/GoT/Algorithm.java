@@ -35,7 +35,7 @@ public class Algorithm {
         SharedInterpreter.setConfig(jepConf);
     }
 
-    public String getSummarize(String text) {
+    public String getSummarize(String text) throws JepException{
         try(SharedInterpreter subInterp = new SharedInterpreter()){
             // run each function from the .py doc I
             subInterp.eval("import summarizer as sum");
@@ -46,8 +46,6 @@ public class Algorithm {
             subInterp.set("textToSummarize", text);
             subInterp.eval("output = sum.generate_summary(textToSummarize, 5)");
             return subInterp.getValue("output", String.class);
-        } catch (JepException ex) {
-            throw new JepException("Problem with Python side: "  + ex);
         }
     }
 
