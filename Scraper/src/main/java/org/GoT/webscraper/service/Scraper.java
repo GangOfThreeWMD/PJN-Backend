@@ -29,6 +29,17 @@ public class Scraper {
         return ServiceLoader.load(NewsProvider.class);
     }
 
+    public List<News> getNews(Source source) {
+        Optional<NewsProvider> newsProvider = this.serviceLoader.stream()
+                .filter(p -> p.get().getSource().equals(source))
+                .map(ServiceLoader.Provider::get)
+                .findFirst();
+        if (newsProvider.isPresent()) {
+            return newsProvider.get().getAllArticles();
+        }
+        return Collections.emptyList();
+    }
+
     public List<News> getBBCNewsArticles(String baseUrl, int charsLimit) {
         Optional<NewsProvider> bbcProvider = this.serviceLoader.stream().filter(p -> p.get().getSource().equals(Source.bbc)).map(ServiceLoader.Provider::get).findFirst();
         if(bbcProvider.isPresent()) {

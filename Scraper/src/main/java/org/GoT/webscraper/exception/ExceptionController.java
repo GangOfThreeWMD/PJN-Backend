@@ -16,4 +16,9 @@ public class ExceptionController {
     public ResponseEntity<String> handleIncorrectLink(IncorrectLink ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(String.format("Incorrect link - %s", ex.getMessage()));
     }
+
+    @ExceptionHandler(IncorrectSource.class)
+    public ResponseEntity<String> handleIncorrectSource(IncorrectSource ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }
