@@ -1,5 +1,6 @@
 package org.GoT.webscraper.model;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class News {
@@ -41,5 +42,18 @@ public class News {
             return Optional.empty();
         }
         return Optional.of(this.urlToImage);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        News news = (News) o;
+        return Objects.equals(title, news.title) && Objects.equals(content, news.content) && Objects.equals(link, news.link) && Objects.equals(urlToImage, news.urlToImage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, content, link, urlToImage);
     }
 }

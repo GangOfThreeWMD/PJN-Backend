@@ -1,5 +1,6 @@
 package org.GoT.summarizer.dto;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class ArticleDto {
@@ -41,5 +42,19 @@ public class ArticleDto {
             return Optional.empty();
         }
         return Optional.of(this.urlToImage);
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArticleDto that = (ArticleDto) o;
+        return Objects.equals(title, that.title) && Objects.equals(content, that.content) && Objects.equals(link, that.link) && Objects.equals(urlToImage, that.urlToImage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, content, link, urlToImage);
     }
 }
