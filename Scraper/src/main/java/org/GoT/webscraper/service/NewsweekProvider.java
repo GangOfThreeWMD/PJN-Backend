@@ -28,7 +28,9 @@ public class NewsweekProvider implements NewsProvider{
 
             String heading = document.getElementsByClass("article-header").get(0).getElementsByTag("h1").get(0).text();
 
-            Elements paragraphs = document.getElementsByClass("article-body").get(0).getElementsByTag("p");
+            Element articleBody = document.getElementsByClass("article-body").get(0);
+
+            Elements paragraphs = articleBody.getElementsByTag("p");
 
             StringBuilder sb = new StringBuilder();
             for (Element paragraph : paragraphs) {
@@ -38,6 +40,19 @@ public class NewsweekProvider implements NewsProvider{
             if(sb.isEmpty())
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
+
+            Element pictureElement = articleBody.getElementsByTag("picture").first();
+
+            if (pictureElement != null) {
+                Element img = pictureElement.getElementsByTag("img").first();
+                if (img != null) {
+                    String src = img.attr("src");
+                    if(!src.isBlank()) {
+                        return Optional.of(new News(heading, sb.toString(), link, src));
+                    }
+                }
+            }
+
             return Optional.of(new News(heading, sb.toString(), link));
 
         } catch (IOException | NullPointerException | IllegalArgumentException | IndexOutOfBoundsException e) {
