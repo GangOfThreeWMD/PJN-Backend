@@ -23,8 +23,8 @@ public class ScraperController {
     }
 
     @GetMapping("/bbc")
-    public List<News> getBBCNewsArticles(@RequestParam(name = "limit", required = false, defaultValue = "191") int charsLimit) {
-        return scraper.getBBCNewsArticles("https://www.bbc.com", charsLimit);
+    public List<News> getBBCNewsArticles() {
+        return scraper.getBBCNewsArticles("https://www.bbc.com");
     }
 
     @GetMapping("/bbc/links")

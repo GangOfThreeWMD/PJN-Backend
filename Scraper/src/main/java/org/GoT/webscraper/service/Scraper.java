@@ -44,7 +44,7 @@ public class Scraper {
         return articleDtoList;
     }
 
-    public List<News> getBBCNewsArticles(String baseUrl, int charsLimit) {
+    public List<News> getBBCNewsArticles(String baseUrl) {
         Optional<NewsProvider> bbcProvider = this.serviceLoader.stream().filter(p -> p.get().getSource().equals(Source.bbc)).map(ServiceLoader.Provider::get).findFirst();
         if(bbcProvider.isPresent()) {
            return bbcProvider.get().getAllArticles();
