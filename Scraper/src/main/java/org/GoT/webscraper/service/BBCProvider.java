@@ -23,7 +23,6 @@ public class BBCProvider implements NewsProvider{
 
     @Override
     public Optional<News> getArticle(String link) {
-//        System.out.println("link: " + link);
         try {
             Document document = Jsoup.connect(link).get();
 

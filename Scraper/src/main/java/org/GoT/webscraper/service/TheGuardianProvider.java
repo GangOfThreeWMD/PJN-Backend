@@ -44,6 +44,23 @@ public class TheGuardianProvider implements NewsProvider{
             if(sb.isEmpty())
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
+
+            Element pictureWrapper = document.getElementsByAttributeValue("data-gu-name", "media").first();
+            Element pictureElement = null;
+            if (pictureWrapper != null) {
+                pictureElement = pictureWrapper.getElementsByTag("picture").first();
+            }
+
+            if (pictureElement != null) {
+                Element img = pictureElement.getElementsByTag("img").first();
+                if (img != null) {
+                    String src = img.attr("src");
+                    if(!src.isBlank()) {
+                        return Optional.of(new News(heading, sb.toString(), link, src));
+                    }
+                }
+            }
+
             return Optional.of(new News(heading, sb.toString(), link));
 
         } catch (IOException | NullPointerException | IllegalArgumentException e) {

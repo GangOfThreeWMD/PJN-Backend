@@ -42,6 +42,22 @@ public class NBCProvider implements NewsProvider{
             if(sb.isEmpty())
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
+
+            Element pictureElement = document.getElementsByClass("article-hero__main-image").first();
+            if (pictureElement == null) {
+                pictureElement = articleParts.first().getElementsByTag("picture").first();
+            }
+
+            if (pictureElement != null) {
+                Element img = pictureElement.getElementsByTag("img").first();
+                if (img != null) {
+                    String src = img.attr("src");
+                    if(!src.isBlank()) {
+                        return Optional.of(new News(heading, sb.toString(), link, src));
+                    }
+                }
+            }
+
             return Optional.of(new News(heading, sb.toString(), link));
 
         } catch (IOException | NullPointerException | IllegalArgumentException | IndexOutOfBoundsException e) {

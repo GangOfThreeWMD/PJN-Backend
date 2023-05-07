@@ -38,6 +38,19 @@ public class DigitalJournalProvider implements NewsProvider{
             if(sb.isEmpty())
                 return Optional.empty();
             sb.deleteCharAt(sb.length() - 1); // remove space in end of content
+
+            Element imgWrapper = document.getElementsByAttributeValue("itemprop", "image").first();
+
+            if (imgWrapper != null) {
+                Element img = imgWrapper.getElementsByTag("img").first();
+                if (img != null) {
+                    String src = img.attr("src");
+                    if(!src.isBlank()) {
+                        return Optional.of(new News(heading, sb.toString(), link, src));
+                    }
+                }
+            }
+
             return Optional.of(new News(heading, sb.toString(), link));
 
         } catch (IOException | NullPointerException | IllegalArgumentException | IndexOutOfBoundsException e) {
