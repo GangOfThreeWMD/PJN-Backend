@@ -15,7 +15,7 @@ def read_article(input, is_file_path):
     sentences = []
 
     for sentence in article:
-        print(sentence)
+        # print(sentence)
         sentences.append(sentence.replace("[^a-zA-Z]", " ").split(" "))
     sentences.pop()
 
@@ -63,7 +63,6 @@ def build_similarity_matrix(sentences, stop_words):
 
 
 def generate_summary(text, top_n=5, is_file_path=False, min_length=128):
-    nltk.download("stopwords")
     stop_words = stopwords.words('english')
     summarize_text = []
 
@@ -79,7 +78,7 @@ def generate_summary(text, top_n=5, is_file_path=False, min_length=128):
 
     # Step 4 - Sort the rank and pick top sentences
     ranked_sentence = sorted(((scores[i],s) for i,s in enumerate(sentences)), reverse=True)
-    print("Indexes of top ranked_sentence order are ", ranked_sentence)
+    # print("Indexes of top ranked_sentence order are ", ranked_sentence)
 
     if len(ranked_sentence) < top_n:
         top_n = len(ranked_sentence)
@@ -94,8 +93,13 @@ def generate_summary(text, top_n=5, is_file_path=False, min_length=128):
     return "".join(summarize_text)
 
 
+def init():
+    nltk.download("stopwords")
+
+
 # let's begin
 if __name__ == '__main__':
+    init()
     output = generate_summary("msft.txt", 2, True)
     print(output)
 
