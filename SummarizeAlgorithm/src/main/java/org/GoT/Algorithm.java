@@ -38,22 +38,30 @@ public class Algorithm {
         this.firstRun = true;
     }
 
-    public String getSummarize(String text) throws JepException{
+    public String getSummarize(String text, SummarizeProperties properties) throws JepException{
+        int max_sentences = properties.maxSentences();
+        int min_length = properties.min_length();
+
         try(SharedInterpreter subInterp = new SharedInterpreter()){
-            // run each function from the .py doc I
             subInterp.eval("import summarizer as sum");
             if(firstRun) {
                 subInterp.eval("sum.init()");
                 firstRun = false;
             }
             subInterp.set("textToSummarize", text);
-            subInterp.eval("output = sum.generate_summary(textToSummarize, 5)");
+            subInterp.set("max_sentences", max_sentences);
+            subInterp.set("min_length", min_length);
+            subInterp.eval("""
+                    output = sum.generate_summary(text=textToSummarize,
+                    top_n=max_sentences,
+                    min_length=min_length)
+                    """);
             return subInterp.getValue("output", String.class);
         }
     }
 
     public static void main(String[] args) throws IOException {
         Algorithm algorithm = new Algorithm();
-        System.out.println(algorithm.getSummarize("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum placerat sit amet velit porttitor rutrum. Quisque turpis risus, egestas id eros at, viverra ultricies dolor. Fusce dictum dui id justo ultricies, in lobortis erat viverra. Donec sed purus ipsum. Nulla condimentum ut lorem vel mattis. Donec lacinia velit ac quam commodo placerat. Nam vehicula auctor eros at mattis. Donec pharetra est a metus viverra volutpat at ac lacus."));
+        System.out.println(algorithm.getSummarize("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum placerat sit amet velit porttitor rutrum. Quisque turpis risus, egestas id eros at, viverra ultricies dolor. Fusce dictum dui id justo ultricies, in lobortis erat viverra. Donec sed purus ipsum. Nulla condimentum ut lorem vel mattis. Donec lacinia velit ac quam commodo placerat. Nam vehicula auctor eros at mattis. Donec pharetra est a metus viverra volutpat at ac lacus.", SummarizeProperties.getDefault()));
     }
 }
