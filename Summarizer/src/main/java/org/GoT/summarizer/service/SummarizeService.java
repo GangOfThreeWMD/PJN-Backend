@@ -2,6 +2,7 @@ package org.GoT.summarizer.service;
 
 import jep.JepException;
 import org.GoT.Algorithm;
+import org.GoT.SummarizeProperties;
 import org.GoT.summarizer.dto.ArticleDto;
 import org.GoT.webscraper.exception.IncorrectLink;
 import org.GoT.webscraper.model.News;
@@ -105,13 +106,13 @@ public class SummarizeService {
         if (news.getUrlToImage().isPresent()) {
             return new ArticleDto(
                     news.getTitle(),
-                    shortenText(summarizeAlgorithm.getSummarize(news.getContent()), this.lengthOfArticle),
+                    shortenText(summarizeAlgorithm.getSummarize(news.getContent(), SummarizeProperties.getDefault()), this.lengthOfArticle),
                     news.getLink(),
                     news.getUrlToImage().get());
         }
         return new ArticleDto(
                 news.getTitle(),
-                shortenText(summarizeAlgorithm.getSummarize(news.getContent()), this.lengthOfArticle),
+                shortenText(summarizeAlgorithm.getSummarize(news.getContent(), SummarizeProperties.getDefault()), this.lengthOfArticle),
                 news.getLink());
     }
 
@@ -139,8 +140,8 @@ public class SummarizeService {
         this.lengthOfArticle = length;
     }
 
-    public String summarizeText(String textToSummarize) {
-        return this.summarizeAlgorithm.getSummarize(textToSummarize);
+    public String summarizeText(String textToSummarize, SummarizeProperties properties) {
+        return this.summarizeAlgorithm.getSummarize(textToSummarize, properties);
     }
 
     private String shortenText(String text, int maxLength) {
