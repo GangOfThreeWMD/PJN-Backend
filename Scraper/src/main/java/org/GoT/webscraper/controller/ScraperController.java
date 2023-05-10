@@ -23,7 +23,7 @@ public class ScraperController {
     }
 
     @GetMapping("/{source}/links")
-    public Set<String> getBBCNewsLinks(@PathVariable Optional<Source> source) {
+    public Set<String> getNewsLinks(@PathVariable Optional<Source> source) {
         if(source.isEmpty()) {
             throw new IncorrectSource("Insert wrong provider");
         }
