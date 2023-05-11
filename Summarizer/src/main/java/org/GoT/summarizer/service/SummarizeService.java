@@ -141,7 +141,7 @@ public class SummarizeService {
     }
 
     public String summarizeText(String textToSummarize, SummarizeProperties properties) {
-        String cleanText = textToSummarize.replaceAll("[\r\n]", "");
+        String cleanText = textToSummarize.replaceAll("[\r\n]", "").replaceAll("\\.", ". ");
         return this.summarizeAlgorithm.getSummarize(cleanText, properties);
     }
 
