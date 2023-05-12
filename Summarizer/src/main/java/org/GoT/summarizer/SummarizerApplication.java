@@ -1,6 +1,5 @@
 package org.GoT.summarizer;
 
-import org.GoT.webscraper.service.Scraper;
 import org.GoT.Algorithm;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
