@@ -7,7 +7,6 @@ import org.GoT.summarizer.dto.ArticleDto;
 import org.GoT.webscraper.exception.IncorrectLink;
 import org.GoT.webscraper.model.News;
 import org.GoT.webscraper.service.NewsProvider;
-import org.GoT.webscraper.service.Scraper;
 import org.GoT.webscraper.model.Source;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -23,15 +22,12 @@ import java.util.ServiceLoader;
 @Service
 @CacheConfig(cacheNames={"allArticles", "selectedArticles", "limitArticles", "limitSelectedArticles"})
 public class SummarizeService {
-    private final ServiceLoader<NewsProvider> serviceLoader;
-
     private final Algorithm summarizeAlgorithm;
 
     private int lengthOfArticle;
 
 
-    public SummarizeService(Scraper scraper, Algorithm algorithm) {
-        this.serviceLoader = scraper.getAllProvider();
+    public SummarizeService(Algorithm algorithm) {
         this.summarizeAlgorithm = algorithm;
         this.lengthOfArticle = 192;
     }
@@ -39,6 +35,7 @@ public class SummarizeService {
     @Cacheable(value = "limitArticles", key = "#limit")
     public List<ArticleDto> getSummaries(long limit) {
         List<ArticleDto> articleDtoList = new ArrayList<>();
+        var serviceLoader = ServiceLoader.load(NewsProvider.class);
         for(NewsProvider newsProvider: serviceLoader) {
             articleDtoList.addAll(getArticles(newsProvider, limit));
         }
@@ -48,6 +45,7 @@ public class SummarizeService {
     @Cacheable(value = "allArticles")
     public List<ArticleDto> getSummaries() {
         List<ArticleDto> articleDtoList = new ArrayList<>();
+        var serviceLoader = ServiceLoader.load(NewsProvider.class);
         for(NewsProvider newsProvider: serviceLoader) {
             try {
                 articleDtoList.addAll(getArticles(newsProvider));
@@ -61,6 +59,7 @@ public class SummarizeService {
     @Cacheable(value = "selectedArticles", key = "#source")
     public List<ArticleDto> getSummaries(Source source) {
         List<ArticleDto> articleDtoList = new ArrayList<>();
+        var serviceLoader = ServiceLoader.load(NewsProvider.class);
         for(NewsProvider newsProvider: serviceLoader) {
             if (!source.equals(newsProvider.getSource()))
                 continue;
@@ -72,6 +71,7 @@ public class SummarizeService {
     @Cacheable(value = "limitSelectedArticles", key = "{#source, #limit}")
     public List<ArticleDto> getSummaries(Source source, long limit) {
         List<ArticleDto> articleDtoList = new ArrayList<>();
+        var serviceLoader = ServiceLoader.load(NewsProvider.class);
         for(NewsProvider newsProvider: serviceLoader) {
             if (!source.equals(newsProvider.getSource()))
                 continue;
@@ -130,6 +130,7 @@ public class SummarizeService {
     }
 
     public List<Source> getSources() {
+        var serviceLoader = ServiceLoader.load(NewsProvider.class);
         return serviceLoader.stream()
                 .map( p -> p.get().getSource())
                 .toList();

@@ -1,6 +1,5 @@
 package org.GoT.summarizer;
 
-import org.GoT.webscraper.service.Scraper;
 import org.GoT.Algorithm;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,11 +16,6 @@ public class SummarizerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SummarizerApplication.class, args);
-	}
-
-	@Bean
-	public Scraper getScrapper() {
-		return new Scraper();
 	}
 
 	@Bean

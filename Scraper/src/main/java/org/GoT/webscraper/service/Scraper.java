@@ -17,11 +17,7 @@ public class Scraper {
     private final ServiceLoader<NewsProvider> serviceLoader;
 
     public Scraper() {
-        this.serviceLoader = getAllProvider();
-    }
-
-    public ServiceLoader<NewsProvider> getAllProvider() {
-        return ServiceLoader.load(NewsProvider.class);
+        this.serviceLoader = ServiceLoader.load(NewsProvider.class);
     }
 
     public List<News> getNews(Source source) {
