@@ -58,6 +58,11 @@ Project is: *finite*.
 
 The project was built to test natural language processing methods. The additional purpose of this project was to test the connection between Python code and Java code within one project. This test has been successful, and the project has been completed.
 
+## Materials
+- [Report](https://docs.google.com/document/d/1EHNQVWlO_BGVpdeYSeY8RapL3kKRYQV-/edit?usp=sharing&ouid=117705106547030467802&rtpof=true&sd=true)
+- [Presentation](https://docs.google.com/presentation/d/1W7swlp67VzHZ5zvKUNOZCFMyq8KhnmI0/edit?usp=sharing&ouid=117705106547030467802&rtpof=true&sd=true)
+- [Figma (Mock)](https://www.figma.com/file/RbjUeLMYH0zcGZcxCEYVnt/ClipSum?type=design&node-id=0%3A1&mode=design&t=CFA8hl7yhZUlnJ8s-1)
+
 ## Documentations:
 - [Project page for library JEP](https://github.com/ninia/jep)
 - [Java documentation for Library JEP](https://ninia.github.io/jep/javadoc/4.1/)
