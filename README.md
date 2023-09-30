@@ -52,6 +52,12 @@ export LD_LIBRARY_PATH="/usr/local/lib/python<python version>/dist-packages"$LD_
 ```
 2. install library for Python (step 10 for Intellij instruction)
 
+## Status
+
+Project is: *finite*.
+
+The project was built to test natural language processing methods. The additional purpose of this project was to test the connection between Python code and Java code within one project. This test has been successful, and the project has been completed.
+
 ## Documentations:
 - [Project page for library JEP](https://github.com/ninia/jep)
 - [Java documentation for Library JEP](https://ninia.github.io/jep/javadoc/4.1/)
